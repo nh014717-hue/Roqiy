@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>فحص التثبيت</title>
+<link rel="manifest" href="manifest.json">
+<style>
+body{font-family:system-ui,Tahoma,sans-serif;margin:0;padding:16px;background:#f4f9fc;color:#23364d;line-height:1.7}
+h1{font-size:20px;margin:0 0 12px}
+.row{background:#fff;border-radius:12px;padding:10px 14px;margin:8px 0;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.ok{color:#1a8a5f}.bad{color:#c0392b}.wait{color:#b7791f}
+small{display:block;color:#6b7c8e}
+button{font:inherit;padding:10px 18px;border:0;border-radius:10px;background:#347fc4;color:#fff;margin-top:8px}
+</style>
+</head>
+<body>
+<h1>🔍 فحص تثبيت البرنامج</h1>
+<div id="out"></div>
+<button id="installBtn" hidden>تثبيت التطبيق الآن</button>
+<script>
+const out=document.getElementById('out');
+const rows={};
+function row(id,title){const d=document.createElement('div');d.className='row';d.innerHTML='<b>'+title+'</b> <span class="wait">… جاري الفحص</span><small></small>';out.appendChild(d);rows[id]=d}
+function set(id,ok,msg,hint){const d=rows[id];const s=d.querySelector('span');s.className=ok?'ok':(ok===null?'wait':'bad');s.textContent=ok?'✔ تمام':(ok===null?'⚠ تنبيه':'✘ مشكلة');d.querySelector('small').textContent=(msg||'')+(hint?' — '+hint:'')}
+
+row('https','1) الاتصال الآمن (HTTPS)');
+row('browser','2) المتصفح');
+row('manifest','3) ملف manifest.json');
+row('icons','4) الأيقونات (192 و 512)');
+row('sw','5) الـ Service Worker');
+row('prompt','6) جاهزية التثبيت');
+row('mode','7) وضع التشغيل الحالي');
+
+// 1
+const secure=location.protocol==='https:'||location.hostname==='localhost';
+set('https',secure,location.protocol+'//'+location.host, secure?'':'لازم الرابط يبدأ بـ https://');
+
+// 2
+const ua=navigator.userAgent;
+const inApp=/FBAN|FBAV|Instagram|Line\/|Snapchat|TikTok|Telegram|; wv\)/i.test(ua);
+const ios=/iPhone|iPad|iPod/i.test(ua);
+set('browser',inApp?false:(ios?null:true),ua.slice(0,90),
+  inApp?'ده متصفح داخلي في تطبيق — افتح الرابط من Chrome مباشرة':(ios?'على الآيفون التثبيت بيتم من Safari فقط: زر المشاركة ← إضافة إلى الشاشة الرئيسية':''));
+
+// 3 + 4
+(async()=>{
+  try{
+    const r=await fetch('manifest.json',{cache:'no-store'});
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    const m=await r.json();
+    const need=['name','start_url','display','icons'].filter(k=>!m[k]);
+    set('manifest',need.length===0,'name: '+m.name+' | display: '+m.display, need.length?'ناقص: '+need.join(', '):'');
+    let bad=[];
+    for(const ic of (m.icons||[])){
+      try{const ir=await fetch(ic.src,{cache:'no-store'});if(!ir.ok)bad.push(ic.src+' ('+ir.status+')')}catch(e){bad.push(ic.src)}
+    }
+    set('icons',bad.length===0,(m.icons||[]).length+' أيقونات', bad.length?'مش بتتحمّل: '+bad.join(' ، '):'');
+  }catch(e){
+    set('manifest',false,String(e.message||e),'الملف مش موجود جنب index.html أو مرفوع غلط');
+    set('icons',false,'','اتأكد إن فولدر icons مرفوع');
+  }
+})();
+
+// 5
+(async()=>{
+  if(!('serviceWorker' in navigator)){set('sw',false,'','المتصفح أو الرابط مش بيدعم الـ Service Worker (غالبًا بسبب HTTP)');return}
+  try{
+    let reg=await navigator.serviceWorker.getRegistration();
+    if(!reg){reg=await navigator.serviceWorker.register('sw.js')}
+    await navigator.serviceWorker.ready;
+    const st=(reg.active&&reg.active.state)||'غير معروف';
+    set('sw',true,'النطاق: '+reg.scope+' | الحالة: '+st);
+  }catch(e){
+    set('sw',false,String(e.message||e),'ملف sw.js مش موجود في نفس مكان index.html أو فيه خطأ');
+  }
+})();
+
+// 6
+let deferred=null;
+const btn=document.getElementById('installBtn');
+window.addEventListener('beforeinstallprompt',e=>{
+  e.preventDefault();deferred=e;
+  set('prompt',true,'المتصفح قال إن التطبيق قابل للتثبيت');
+  btn.hidden=false;
+});
+window.addEventListener('appinstalled',()=>set('prompt',true,'تم التثبيت بنجاح'));
+btn.onclick=async()=>{if(!deferred)return;deferred.prompt();await deferred.userChoice;deferred=null;btn.hidden=true};
+setTimeout(()=>{
+  if(!deferred && rows.prompt.querySelector('span').className==='wait'){
+    set('prompt',ios?null:false,'المتصفح لم يعرض خيار التثبيت',
+      ios?'طبيعي على iOS':'راجع النقاط اللي فوق — أي ✘ هو السبب. لو كلهم ✔ وكنت ثبّته قبل كده امسح التطبيق القديم وجرّب تاني');
+  }
+},4000);
+
+// 7
+const standalone=matchMedia('(display-mode: standalone)').matches||navigator.standalone;
+set('mode',standalone?true:null,standalone?'شغال كتطبيق مثبّت':'شغال داخل المتصفح',standalone?'':'ده طبيعي قبل التثبيت');
+</script>
+</body>
+</html>
