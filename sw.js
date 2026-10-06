@@ -14,8 +14,8 @@ const SHELL_FILES = [
   './manifest.json',
   './cloud-sync.js',
   './firebase-config.js',
-  './icons/icon-192.png',
-  './icons/icon-512.png'
+  './icon-192.png',
+  './icon-512.png'
 ];
 
 // مصادر خارجية بتتخزن تلقائيًا بعد أول استخدام (خطوط، مكتبة QR، بيانات الأذكار)
