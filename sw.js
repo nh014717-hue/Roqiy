@@ -1,6 +1,6 @@
 /* Service Worker - عاداتي اليومية
    غيّر رقم VERSION كل ما تعدّل في الملفات عشان المستخدمين ياخدوا النسخة الجديدة */
-const VERSION = 'v15';
+const VERSION = 'v16';
 const SHELL_CACHE = 'habits-shell-' + VERSION;
 const RUNTIME_CACHE = 'habits-runtime-' + VERSION;
 
@@ -20,8 +20,8 @@ const SHELL_FILES = [
   './manifest.json',
   './cloud-sync.js',
   './firebase-config.js',
-  './icons-192.png',
-  './icons-512.png'
+  './icons/icon-192.png',
+  './icons/icon-512.png'
 ];
 
 // مصادر خارجية بتتخزن تلقائيًا بعد أول استخدام (خطوط، مكتبة QR، بيانات الأذكار)
