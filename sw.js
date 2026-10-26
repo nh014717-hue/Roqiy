@@ -1,6 +1,6 @@
 /* Service Worker - عاداتي اليومية
    غيّر رقم VERSION كل ما تعدّل في الملفات عشان المستخدمين ياخدوا النسخة الجديدة */
-const VERSION = 'v16';
+const VERSION = 'v17';
 const SHELL_CACHE = 'habits-shell-' + VERSION;
 const RUNTIME_CACHE = 'habits-runtime-' + VERSION;
 

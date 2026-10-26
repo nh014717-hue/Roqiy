@@ -279,3 +279,28 @@ body{font-feature-settings:normal}
 
 .th-sl.k img,.th-sl.c img{border-radius:18px;filter:none!important;max-height:320px;box-shadow:0 8px 20px rgba(30,90,160,.22);-webkit-mask-image:none;mask-image:none}
 body.global-dark .th-sl.c img,body.global-dark .th-sl.k img{filter:none!important}
+
+/* ===== v14.3: صورة كاملة بدون فراغ + صندوق ملون للمهام + أهداف بدون شطب ===== */
+.th-hero{overflow:hidden;padding-bottom:0}
+.th-img{padding:0;margin:0}
+.th-slides{align-items:flex-start}
+.th-sl{display:block;padding:0}
+.th-img img,.th-sl.k img,.th-sl.c img{display:block;width:100%;height:auto;max-width:none;max-height:none;border-radius:0;box-shadow:none;object-fit:cover}
+.th-sl.k img{filter:none}
+.th-dots{position:absolute;left:0;right:0;bottom:8px;padding:0;z-index:3}.th-dots i{box-shadow:0 1px 4px rgba(0,0,0,.35);background:rgba(255,255,255,.75)}.th-dots i.on{background:#f5a800}
+.th-img{position:relative}
+.tl{background:linear-gradient(180deg,#f2f7ff 0,#e7f0fc 100%);border:1px solid #d3e2f6;border-top:0;box-shadow:0 14px 26px rgba(70,110,170,.16)}
+.tl-day:not(.sel){color:#7f8ca3}
+.tr-chk{background:#fff}
+.tl-empty{color:#7f8ca3}
+body.global-dark .tl{background:#17222e;border-color:#243649}
+/* أهداف شهرية/سنوية: صندوق مضيء بدل الشطب */
+.gt-row.done .gt-text,.gt-row.done .gt-text b{text-decoration:none!important;color:#1f6b45}
+.gt-row.done td{background:linear-gradient(180deg,#effaf2,#dff4e6)!important;box-shadow:inset 0 1px 0 #fff,inset 0 -1px 0 #bfe5cb}
+.gt-row.done td:first-child{box-shadow:inset 4px 0 0 #4caf50,inset 0 1px 0 #fff,inset 0 -1px 0 #bfe5cb}
+.gt-row.done .goal-icon{filter:drop-shadow(0 3px 5px rgba(76,175,80,.5))}
+body.global-dark .gt-row.done td{background:#173a2b!important}body.global-dark .gt-row.done .gt-text,body.global-dark .gt-row.done .gt-text b{color:#9ff0c0}
+.th-slides{aspect-ratio:1/1.06;align-items:stretch}
+.th-sl{height:100%}
+.th-img img,.th-sl.k img,.th-sl.c img{height:100%;object-fit:cover;object-position:center}
+.th-sl.k img{object-position:center 40%}
