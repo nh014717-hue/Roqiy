@@ -14,14 +14,14 @@ const SHELL_FILES = [
   './ideas.js',
   './timeline.js',
   './timeline.css',
-  './hero.jpg',
-  './hero2.jpg',
+  './hero.png',
+  './hero2.png',
   './content-data.js',
   './manifest.json',
   './cloud-sync.js',
   './firebase-config.js',
-  './icons/icon-192.png',
-  './icons/icon-512.png'
+  './icons-192.png',
+  './icons-512.png'
 ];
 
 // مصادر خارجية بتتخزن تلقائيًا بعد أول استخدام (خطوط، مكتبة QR، بيانات الأذكار)
